@@ -1,0 +1,141 @@
+
+
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulations &#8212; sphinx-example 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Comparison between formulations" href="formulations/timing_plot.html" />
+    <link rel="prev" title="Manually checking convergence order" href="methods/order_check.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="formulations/timing_plot.html" title="Comparison between formulations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="methods/order_check.html" title="Manually checking convergence order"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sphinx-example 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Formulations</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="formulations">
+<h1>Formulations<a class="headerlink" href="#formulations" title="Permalink to this headline">¶</a></h1>
+<p>In ozone, there are 3 formulations for solving the ODE.
+To illustrate, let us consider applying two time steps of the backward Euler method:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}y_1 &amp;= y_0 + h f(t, y_1) \\
+y_2 &amp;= y_1 + h f(t, y_2) \\\end{split}\]</div>
+<p>1. Time-marching: integrating the ODE one time step at a time,
+evaluating the appropriate equations (explicit methods)
+or solving the system of equations (implicit methods) at each time step.
+In the example, time marching would involve solving the two nonlinear equations
+(for <span class="math notranslate nohighlight">\(y_1\)</span> and <span class="math notranslate nohighlight">\(y_2\)</span>, respectively), one after the other.</p>
+<p>2. System-based: integrating the ODE by combining the equations from all time steps into a single nonlinear system of equations and solving with a nonlinear solver.
+In the example, the system-based formulation would formulate and solve the 2-by-2 nonlinear system,</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}y_1 - y_0 - h f(t, y_1) = 0 \\
+y_2 - y_1 - h f(t, y_2) = 0 \\\end{split}\]</div>
+</div></blockquote>
+<p>3. Optimizer-based: integrating the ODE by treating the ODE state variables and their implicit equations
+as design variables and constraints, respectively, in the optimization problem:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}\text{min} &amp; \quad \text{objective} \\
+\text{with respect to} &amp; \quad y_1, y_2 \\
+\text{subject to} &amp; \quad y_1 - y_0 - h f(t, y_1) = 0 \\
+&amp; \quad y_2 - y_1 - h f(t, y_2) = 0 \\\end{split}\]</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="formulations/timing_plot.html">Comparison between formulations</a></li>
+</ul>
+</div>
+</div></blockquote>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="methods/order_check.html"
+                        title="previous chapter">Manually checking convergence order</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="formulations/timing_plot.html"
+                        title="next chapter">Comparison between formulations</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_src_docs/formulations.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="formulations/timing_plot.html" title="Comparison between formulations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="methods/order_check.html" title="Manually checking convergence order"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sphinx-example 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Formulations</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Victor Gandarillas.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

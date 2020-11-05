@@ -1,0 +1,275 @@
+
+
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2-D orbit ODE &#8212; sphinx-example 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="3-D orbit ODE" href="three_d_orbit.html" />
+    <link rel="prev" title="Projectile dynamics ODE" href="projectile.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="three_d_orbit.html" title="3-D orbit ODE"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="projectile.html" title="Projectile dynamics ODE"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sphinx-example 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples library</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">2-D orbit ODE</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="d-orbit-ode">
+<h1>2-D orbit ODE<a class="headerlink" href="#d-orbit-ode" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ode-system">
+<h2>1. ODE system<a class="headerlink" href="#ode-system" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span><span class="p">,</span> <span class="n">linalg</span>
+
+<span class="kn">from</span> <span class="nn">openmdao.api</span> <span class="kn">import</span> <span class="n">ExplicitComponent</span>
+
+
+<span class="k">class</span> <span class="nc">TwoDOrbitSystem</span><span class="p">(</span><span class="n">ExplicitComponent</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">declare</span><span class="p">(</span><span class="s1">&#39;num_nodes&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">type_</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;num_nodes&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s1">&#39;velocity&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="s1">&#39;dpos_dt&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="s1">&#39;dvel_dt&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="c1"># self.declare_partials(&#39;dy_dt&#39;, &#39;y&#39;, val=np.eye(num))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_partials</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">dependent</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_partials</span><span class="p">(</span><span class="s1">&#39;dpos_dt&#39;</span><span class="p">,</span> <span class="s1">&#39;velocity&#39;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">sparse</span><span class="o">.</span><span class="n">block_diag</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">)]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_partials</span><span class="p">(</span><span class="s1">&#39;dvel_dt&#39;</span><span class="p">,</span> <span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="n">dependent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;dpos_dt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;velocity&#39;</span><span class="p">]</span>
+        <span class="n">attraction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;dvel_dt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">attraction</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">compute_partials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">partials</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">][</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">][</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mf">5.</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+        <span class="n">jac</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">scale</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">]])</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;num_nodes&#39;</span><span class="p">]</span>
+        <span class="n">partials</span><span class="p">[</span><span class="s1">&#39;dvel_dt&#39;</span><span class="p">,</span> <span class="s1">&#39;position&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">block_diag</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">jac</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="odefunction">
+<h2>2. ODEFunction<a class="headerlink" href="#odefunction" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">ozone.api</span> <span class="kn">import</span> <span class="n">ODEFunction</span>
+<span class="kn">from</span> <span class="nn">ozone.tests.ode_function_library.two_d_orbit_sys</span> <span class="kn">import</span> <span class="n">TwoDOrbitSystem</span>
+
+
+<span class="k">class</span> <span class="nc">TwoDOrbitFunction</span><span class="p">(</span><span class="n">ODEFunction</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_system</span><span class="p">(</span><span class="n">TwoDOrbitSystem</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_state</span><span class="p">(</span><span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="s1">&#39;dpos_dt&#39;</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_state</span><span class="p">(</span><span class="s1">&#39;velocity&#39;</span><span class="p">,</span> <span class="s1">&#39;dvel_dt&#39;</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="s1">&#39;velocity&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_time</span><span class="p">(</span><span class="n">targets</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_test_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ecc</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="mf">2.</span>
+        <span class="n">initial_conditions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ecc</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+            <span class="s1">&#39;velocity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">ecc</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ecc</span><span class="p">))])</span>
+        <span class="p">}</span>
+        <span class="n">t0</span> <span class="o">=</span> <span class="mf">0.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">return</span> <span class="n">initial_conditions</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t1</span>
+
+    <span class="k">def</span> <span class="nf">get_exact_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_conditions</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="n">ecc</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">initial_conditions</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ecc</span><span class="p">,</span> <span class="mi">0</span><span class="p">])}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-script-and-output">
+<h2>3. Run script and output<a class="headerlink" href="#run-script-and-output" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">openmdao.api</span> <span class="kn">import</span> <span class="n">Problem</span>
+<span class="kn">from</span> <span class="nn">ozone.api</span> <span class="kn">import</span> <span class="n">ODEIntegrator</span>
+<span class="kn">from</span> <span class="nn">ozone.tests.ode_function_library.two_d_orbit_func</span> <span class="kn">import</span> <span class="n">TwoDOrbitFunction</span>
+
+<span class="n">ode_function</span> <span class="o">=</span> <span class="n">TwoDOrbitFunction</span><span class="p">()</span>
+
+<span class="n">ecc</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="mf">2.</span>
+<span class="n">initial_conditions</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ecc</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="s1">&#39;velocity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">ecc</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ecc</span><span class="p">))])</span>
+<span class="p">}</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="mf">0.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="n">t1</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+<span class="n">num</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+
+<span class="n">method_name</span> <span class="o">=</span> <span class="s1">&#39;RK4&#39;</span>
+<span class="n">formulation</span> <span class="o">=</span> <span class="s1">&#39;solver-based&#39;</span>
+
+<span class="n">integrator</span> <span class="o">=</span> <span class="n">ODEIntegrator</span><span class="p">(</span><span class="n">ode_function</span><span class="p">,</span> <span class="n">formulation</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span>
+    <span class="n">times</span><span class="o">=</span><span class="n">times</span><span class="p">,</span> <span class="n">initial_conditions</span><span class="o">=</span><span class="n">initial_conditions</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">prob</span> <span class="o">=</span> <span class="n">Problem</span><span class="p">(</span><span class="n">integrator</span><span class="p">)</span>
+<span class="n">prob</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+<span class="n">prob</span><span class="o">.</span><span class="n">run_model</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">prob</span><span class="p">[</span><span class="s1">&#39;state:position&#39;</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">prob</span><span class="p">[</span><span class="s1">&#39;state:position&#39;</span><span class="p">][:,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">=================</span>
+<span class="n">integration_group</span>
+<span class="o">=================</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">0</span> <span class="p">;</span> <span class="mf">74.6056844</span> <span class="mi">1</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">1</span> <span class="p">;</span> <span class="mf">35.7616574</span> <span class="mf">0.479342261</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">2</span> <span class="p">;</span> <span class="mf">15.3558738</span> <span class="mf">0.205827128</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">3</span> <span class="p">;</span> <span class="mf">13.2164384</span> <span class="mf">0.177150556</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">4</span> <span class="p">;</span> <span class="mf">6.04246296</span> <span class="mf">0.0809919915</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">5</span> <span class="p">;</span> <span class="mf">6.49100594</span> <span class="mf">0.0870041739</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">6</span> <span class="p">;</span> <span class="mf">4.12712318</span> <span class="mf">0.0553191518</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">7</span> <span class="p">;</span> <span class="mf">3.32775778</span> <span class="mf">0.0446046143</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">8</span> <span class="p">;</span> <span class="mf">2.15686415</span> <span class="mf">0.0289101851</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">9</span> <span class="p">;</span> <span class="mf">1.66275182</span> <span class="mf">0.0222872001</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">10</span> <span class="p">;</span> <span class="mf">0.993202633</span> <span class="mf">0.0133126938</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">11</span> <span class="p">;</span> <span class="mf">0.607553079</span> <span class="mf">0.00814352263</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">12</span> <span class="p">;</span> <span class="mf">0.302714386</span> <span class="mf">0.00405752442</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">13</span> <span class="p">;</span> <span class="mf">0.145366647</span> <span class="mf">0.0019484661</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">14</span> <span class="p">;</span> <span class="mf">0.0577220054</span> <span class="mf">0.00077369447</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">15</span> <span class="p">;</span> <span class="mf">0.0220749799</span> <span class="mf">0.000295888713</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">16</span> <span class="p">;</span> <span class="mf">0.00724063659</span> <span class="mf">9.70520766e-05</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">17</span> <span class="p">;</span> <span class="mf">0.00231961036</span> <span class="mf">3.10916035e-05</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">18</span> <span class="p">;</span> <span class="mf">0.000651829785</span> <span class="mf">8.73699893e-06</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">19</span> <span class="p">;</span> <span class="mf">0.000180911335</span> <span class="mf">2.42490015e-06</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">20</span> <span class="p">;</span> <span class="mf">4.47924274e-05</span> <span class="mf">6.00388935e-07</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">21</span> <span class="p">;</span> <span class="mf">1.10239435e-05</span> <span class="mf">1.47762782e-07</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">22</span> <span class="p">;</span> <span class="mf">2.44686866e-06</span> <span class="mf">3.27973489e-08</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">23</span> <span class="p">;</span> <span class="mf">5.42146712e-07</span> <span class="mf">7.26682848e-09</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">24</span> <span class="p">;</span> <span class="mf">1.09257963e-07</span> <span class="mf">1.46447236e-09</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">25</span> <span class="p">;</span> <span class="mf">2.20438932e-08</span> <span class="mf">2.95472032e-10</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">26</span> <span class="p">;</span> <span class="mf">4.0715827e-09</span> <span class="mf">5.45746981e-11</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">27</span> <span class="p">;</span> <span class="mf">7.54603598e-10</span> <span class="mf">1.0114559e-11</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">28</span> <span class="p">;</span> <span class="mf">1.28706974e-10</span> <span class="mf">1.7251631e-12</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">29</span> <span class="p">;</span> <span class="mf">2.20646826e-11</span> <span class="mf">2.9575069e-13</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="n">Converged</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/two_d_orbit_TestCase_test_doc.png"><img alt="../../_images/two_d_orbit_TestCase_test_doc.png" src="../../_images/two_d_orbit_TestCase_test_doc.png" style="width: 640.0px; height: 480.0px;" /></a>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2-D orbit ODE</a><ul>
+<li><a class="reference internal" href="#ode-system">1. ODE system</a></li>
+<li><a class="reference internal" href="#odefunction">2. ODEFunction</a></li>
+<li><a class="reference internal" href="#run-script-and-output">3. Run script and output</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="projectile.html"
+                        title="previous chapter">Projectile dynamics ODE</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="three_d_orbit.html"
+                        title="next chapter">3-D orbit ODE</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/_src_docs/examples/two_d_orbit.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="three_d_orbit.html" title="3-D orbit ODE"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="projectile.html" title="Projectile dynamics ODE"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sphinx-example 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples library</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">2-D orbit ODE</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Victor Gandarillas.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

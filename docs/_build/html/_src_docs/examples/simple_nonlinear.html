@@ -1,0 +1,252 @@
+
+
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple nonlinear ODE &#8212; sphinx-example 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Projectile dynamics ODE" href="projectile.html" />
+    <link rel="prev" title="Simple linear ODE" href="simple_linear.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="projectile.html" title="Projectile dynamics ODE"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="simple_linear.html" title="Simple linear ODE"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sphinx-example 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples library</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Simple nonlinear ODE</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="simple-nonlinear-ode">
+<h1>Simple nonlinear ODE<a class="headerlink" href="#simple-nonlinear-ode" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ode-system">
+<h2>1. ODE system<a class="headerlink" href="#ode-system" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">openmdao.api</span> <span class="kn">import</span> <span class="n">ExplicitComponent</span>
+
+
+<span class="k">class</span> <span class="nc">SimpleNonlinearODESystem</span><span class="p">(</span><span class="n">ExplicitComponent</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">declare</span><span class="p">(</span><span class="s1">&#39;num_nodes&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">type_</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;num_nodes&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">num</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="s1">&#39;dy_dt&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="c1"># self.declare_partials(&#39;dy_dt&#39;, &#39;y&#39;, val=np.eye(num))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_partials</span><span class="p">(</span><span class="s1">&#39;dy_dt&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num</span><span class="p">),</span> <span class="n">cols</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_partials</span><span class="p">(</span><span class="s1">&#39;dy_dt&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num</span><span class="p">),</span> <span class="n">cols</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">eye</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+        <span class="c1"># True solution: 2 / (2*C1 - x^2)</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;dy_dt&#39;</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">compute_partials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">partials</span><span class="p">):</span>
+        <span class="n">partials</span><span class="p">[</span><span class="s1">&#39;dy_dt&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+        <span class="n">partials</span><span class="p">[</span><span class="s1">&#39;dy_dt&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="odefunction">
+<h2>2. ODEFunction<a class="headerlink" href="#odefunction" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">ozone.api</span> <span class="kn">import</span> <span class="n">ODEFunction</span>
+<span class="kn">from</span> <span class="nn">ozone.tests.ode_function_library.simple_nonlinear_sys</span> <span class="kn">import</span> <span class="n">SimpleNonlinearODESystem</span>
+
+
+<span class="k">class</span> <span class="nc">SimpleNonlinearODEFunction</span><span class="p">(</span><span class="n">ODEFunction</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_system</span><span class="p">(</span><span class="n">SimpleNonlinearODESystem</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_state</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;dy_dt&#39;</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_time</span><span class="p">(</span><span class="n">targets</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_test_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">t0</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="n">initial_conditions</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">initial_conditions</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t1</span>
+
+    <span class="k">def</span> <span class="nf">get_exact_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_conditions</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="c1"># True solution: 2 / (2*C - t^2)</span>
+        <span class="c1"># outputs[&#39;dy_dt&#39;] = inputs[&#39;t&#39;] * np.square(inputs[&#39;y&#39;])</span>
+
+        <span class="n">y0</span> <span class="o">=</span> <span class="n">initial_conditions</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="n">y0</span> <span class="o">+</span> <span class="n">t0</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">2.</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">C</span> <span class="o">-</span> <span class="n">t</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-script-and-output">
+<h2>3. Run script and output<a class="headerlink" href="#run-script-and-output" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">openmdao.api</span> <span class="kn">import</span> <span class="n">Problem</span>
+<span class="kn">from</span> <span class="nn">ozone.api</span> <span class="kn">import</span> <span class="n">ODEIntegrator</span>
+<span class="kn">from</span> <span class="nn">ozone.tests.ode_function_library.simple_nonlinear_func</span> <span class="kn">import</span> \
+    <span class="n">SimpleNonlinearODEFunction</span>
+
+<span class="n">ode_function</span> <span class="o">=</span> <span class="n">SimpleNonlinearODEFunction</span><span class="p">()</span>
+
+<span class="n">t0</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="n">t1</span> <span class="o">=</span> <span class="mf">1.</span>
+<span class="n">initial_conditions</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">}</span>
+
+<span class="n">num</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+
+<span class="n">method_name</span> <span class="o">=</span> <span class="s1">&#39;RK4&#39;</span>
+<span class="n">formulation</span> <span class="o">=</span> <span class="s1">&#39;solver-based&#39;</span>
+
+<span class="n">integrator</span> <span class="o">=</span> <span class="n">ODEIntegrator</span><span class="p">(</span><span class="n">ode_function</span><span class="p">,</span> <span class="n">formulation</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span>
+    <span class="n">times</span><span class="o">=</span><span class="n">times</span><span class="p">,</span> <span class="n">initial_conditions</span><span class="o">=</span><span class="n">initial_conditions</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">prob</span> <span class="o">=</span> <span class="n">Problem</span><span class="p">(</span><span class="n">integrator</span><span class="p">)</span>
+<span class="n">prob</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+<span class="n">prob</span><span class="o">.</span><span class="n">run_model</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">prob</span><span class="p">[</span><span class="s1">&#39;times&#39;</span><span class="p">],</span> <span class="n">prob</span><span class="p">[</span><span class="s1">&#39;state:y&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;time (s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">=================</span>
+<span class="n">integration_group</span>
+<span class="o">=================</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">0</span> <span class="p">;</span> <span class="mf">16.2481804</span> <span class="mi">1</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">1</span> <span class="p">;</span> <span class="mf">8.99057129</span> <span class="mf">0.553327884</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">2</span> <span class="p">;</span> <span class="mf">5.25549451</span> <span class="mf">0.323451265</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">3</span> <span class="p">;</span> <span class="mf">2.3091862</span> <span class="mf">0.14211968</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">4</span> <span class="p">;</span> <span class="mf">0.78372072</span> <span class="mf">0.0482343684</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">5</span> <span class="p">;</span> <span class="mf">0.212933</span> <span class="mf">0.0131050367</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">6</span> <span class="p">;</span> <span class="mf">0.0479807709</span> <span class="mf">0.00295299348</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">7</span> <span class="p">;</span> <span class="mf">0.00923486381</span> <span class="mf">0.000568362953</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">8</span> <span class="p">;</span> <span class="mf">0.00155294802</span> <span class="mf">9.55767344e-05</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">9</span> <span class="p">;</span> <span class="mf">0.000232098823</span> <span class="mf">1.4284604e-05</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">10</span> <span class="p">;</span> <span class="mf">3.12388759e-05</span> <span class="mf">1.92260765e-06</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">11</span> <span class="p">;</span> <span class="mf">3.82602625e-06</span> <span class="mf">2.35474136e-07</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">12</span> <span class="p">;</span> <span class="mf">4.3003494e-07</span> <span class="mf">2.64666522e-08</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">13</span> <span class="p">;</span> <span class="mf">4.46693954e-08</span> <span class="mf">2.74919371e-09</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">14</span> <span class="p">;</span> <span class="mf">4.3135972e-09</span> <span class="mf">2.65481863e-10</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">15</span> <span class="p">;</span> <span class="mf">3.89222605e-10</span> <span class="mf">2.39548426e-11</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">16</span> <span class="p">;</span> <span class="mf">3.29592108e-11</span> <span class="mf">2.02848626e-12</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="mi">17</span> <span class="p">;</span> <span class="mf">2.62811994e-12</span> <span class="mf">1.6174857e-13</span>
+<span class="n">NL</span><span class="p">:</span> <span class="n">NLBGS</span> <span class="n">Converged</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/simple_nonlinear_TestCase_test_doc.png"><img alt="../../_images/simple_nonlinear_TestCase_test_doc.png" src="../../_images/simple_nonlinear_TestCase_test_doc.png" style="width: 640.0px; height: 480.0px;" /></a>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Simple nonlinear ODE</a><ul>
+<li><a class="reference internal" href="#ode-system">1. ODE system</a></li>
+<li><a class="reference internal" href="#odefunction">2. ODEFunction</a></li>
+<li><a class="reference internal" href="#run-script-and-output">3. Run script and output</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="simple_linear.html"
+                        title="previous chapter">Simple linear ODE</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="projectile.html"
+                        title="next chapter">Projectile dynamics ODE</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/_src_docs/examples/simple_nonlinear.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="projectile.html" title="Projectile dynamics ODE"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="simple_linear.html" title="Simple linear ODE"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sphinx-example 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples library</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Simple nonlinear ODE</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Victor Gandarillas.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

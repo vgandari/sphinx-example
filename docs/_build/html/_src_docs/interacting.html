@@ -1,0 +1,135 @@
+
+
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interacting with the integrator group &#8212; sphinx-example 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Specifying times" href="interacting/specifying_times.html" />
+    <link rel="prev" title="ODEIntegrator" href="api/ode_integrator.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="interacting/specifying_times.html" title="Specifying times"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="api/ode_integrator.html" title="ODEIntegrator"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sphinx-example 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Interacting with the integrator group</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="interacting-with-the-integrator-group">
+<h1>Interacting with the integrator group<a class="headerlink" href="#interacting-with-the-integrator-group" title="Permalink to this headline">¶</a></h1>
+<p>The following docs explain how to specify times, initial conditions, and dynamic and static parameters.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="interacting/specifying_times.html">Specifying times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interacting/specifying_ics.html">Specifying initial conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interacting/specifying_parameters.html">Specifying parameters</a></li>
+</ul>
+</div>
+<p>The rest of the OpenMDAO model can interact with an integrator group
+(assumed to be named <code class="code docutils literal notranslate"><span class="pre">integrator_group</span></code>) in the following ways:</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">integrator_group.initial_time</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">integrator_group.final_time</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">integrator_group.initial_condition:*state_name*</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">integrator_group.static_parameter:*static_parameter_name*</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">integrator_group.dynamic_parameter:*dynamic_parameter_name*</span></code></p></li>
+</ul>
+<p>Outputs:</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">integrator_group.times</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">integrator_group.state:*state_name*</span></code></p></li>
+</ul>
+<p>Inputs are variables that external components can optionally connect to.
+Outputs are variables that external components can optionally connect from.</p>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="api/ode_integrator.html"
+                        title="previous chapter">ODEIntegrator</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="interacting/specifying_times.html"
+                        title="next chapter">Specifying times</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_src_docs/interacting.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="interacting/specifying_times.html" title="Specifying times"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="api/ode_integrator.html" title="ODEIntegrator"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sphinx-example 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Interacting with the integrator group</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Victor Gandarillas.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

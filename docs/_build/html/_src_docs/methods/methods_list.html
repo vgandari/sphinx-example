@@ -1,0 +1,480 @@
+
+
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>List of methods &#8212; sphinx-example 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Convergence order" href="order_plot.html" />
+    <link rel="prev" title="Integration methods" href="../methods.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="order_plot.html" title="Convergence order"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../methods.html" title="Integration methods"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sphinx-example 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../methods.html" accesskey="U">Integration methods</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">List of methods</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="list-of-methods">
+<h1>List of methods<a class="headerlink" href="#list-of-methods" title="Permalink to this headline">¶</a></h1>
+<table class="colwidths-given docutils align-default" id="id1">
+<caption><span class="caption-text">List of integration methods</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Method name</p></th>
+<th class="head"><p>Order</p></th>
+<th class="head"><p>Num. stages</p></th>
+<th class="head"><p>Step vec. size</p></th>
+<th class="head"><p>Type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ForwardEuler</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>ExplicitMidpoint</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-even"><td><p>KuttaThirdOrder</p></td>
+<td><p>3</p></td>
+<td><p>3</p></td>
+<td><p>1</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>RK4</p></td>
+<td><p>4</p></td>
+<td><p>4</p></td>
+<td><p>1</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-even"><td><p>RK6</p></td>
+<td><p>6</p></td>
+<td><p>7</p></td>
+<td><p>1</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>BackwardEuler</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>ImplicitMidpoint</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-even"><td><p>Trapezoidal</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>GaussLegendre2</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>GaussLegendre4</p></td>
+<td><p>4</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-even"><td><p>GaussLegendre6</p></td>
+<td><p>6</p></td>
+<td><p>3</p></td>
+<td><p>1</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Lobatto2</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lobatto4</p></td>
+<td><p>4</p></td>
+<td><p>3</p></td>
+<td><p>1</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>RadauI3</p></td>
+<td><p>3</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-even"><td><p>RadauI5</p></td>
+<td><p>5</p></td>
+<td><p>3</p></td>
+<td><p>1</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>RadauII3</p></td>
+<td><p>3</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-even"><td><p>RadauII5</p></td>
+<td><p>5</p></td>
+<td><p>3</p></td>
+<td><p>1</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AB2</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>3</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>AB3</p></td>
+<td><p>3</p></td>
+<td><p>1</p></td>
+<td><p>4</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-even"><td><p>AB4</p></td>
+<td><p>4</p></td>
+<td><p>1</p></td>
+<td><p>5</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>AB5</p></td>
+<td><p>5</p></td>
+<td><p>1</p></td>
+<td><p>6</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AM2</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-even"><td><p>AM3</p></td>
+<td><p>3</p></td>
+<td><p>1</p></td>
+<td><p>3</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>AM4</p></td>
+<td><p>4</p></td>
+<td><p>1</p></td>
+<td><p>4</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-even"><td><p>AM5</p></td>
+<td><p>5</p></td>
+<td><p>1</p></td>
+<td><p>5</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ABalt2</p></td>
+<td><p>2</p></td>
+<td><p>3</p></td>
+<td><p>2</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>ABalt3</p></td>
+<td><p>3</p></td>
+<td><p>4</p></td>
+<td><p>3</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-even"><td><p>ABalt4</p></td>
+<td><p>4</p></td>
+<td><p>5</p></td>
+<td><p>4</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>ABalt5</p></td>
+<td><p>5</p></td>
+<td><p>6</p></td>
+<td><p>5</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AMalt3</p></td>
+<td><p>3</p></td>
+<td><p>3</p></td>
+<td><p>2</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-even"><td><p>AMalt4</p></td>
+<td><p>4</p></td>
+<td><p>4</p></td>
+<td><p>3</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>AMalt5</p></td>
+<td><p>5</p></td>
+<td><p>5</p></td>
+<td><p>4</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>BDF1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-even"><td><p>BDF2</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>BDF3</p></td>
+<td><p>3</p></td>
+<td><p>1</p></td>
+<td><p>3</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-even"><td><p>BDF4</p></td>
+<td><p>4</p></td>
+<td><p>1</p></td>
+<td><p>4</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>BDF5</p></td>
+<td><p>5</p></td>
+<td><p>1</p></td>
+<td><p>5</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-even"><td><p>BDF6</p></td>
+<td><p>6</p></td>
+<td><p>1</p></td>
+<td><p>6</p></td>
+<td><p>implicit</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AdamsPEC2</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>AdamsPEC3</p></td>
+<td><p>3</p></td>
+<td><p>1</p></td>
+<td><p>3</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-even"><td><p>AdamsPEC4</p></td>
+<td><p>4</p></td>
+<td><p>1</p></td>
+<td><p>4</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>AdamsPEC5</p></td>
+<td><p>5</p></td>
+<td><p>1</p></td>
+<td><p>5</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AdamsPECE2</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-even"><td><p>AdamsPECE3</p></td>
+<td><p>3</p></td>
+<td><p>2</p></td>
+<td><p>3</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-odd"><td><p>AdamsPECE4</p></td>
+<td><p>4</p></td>
+<td><p>2</p></td>
+<td><p>4</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-even"><td><p>AdamsPECE5</p></td>
+<td><p>5</p></td>
+<td><p>2</p></td>
+<td><p>5</p></td>
+<td><p>explicit</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../methods.html"
+                        title="previous chapter">Integration methods</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="order_plot.html"
+                        title="next chapter">Convergence order</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/_src_docs/methods/methods_list.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="order_plot.html" title="Convergence order"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../methods.html" title="Integration methods"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sphinx-example 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../methods.html" >Integration methods</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">List of methods</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Victor Gandarillas.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

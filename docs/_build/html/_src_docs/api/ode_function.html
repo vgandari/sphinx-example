@@ -1,0 +1,283 @@
+
+
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ODEFunction &#8212; sphinx-example 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="ODEIntegrator" href="ode_integrator.html" />
+    <link rel="prev" title="API" href="../api.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ode_integrator.html" title="ODEIntegrator"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../api.html" title="API"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sphinx-example 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../api.html" accesskey="U">API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ODEFunction</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="odefunction">
+<h1>ODEFunction<a class="headerlink" href="#odefunction" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="ozone.ode_function.ODEFunction">
+<em class="property">class </em><code class="sig-prename descclassname">ozone.ode_function.</code><code class="sig-name descname">ODEFunction</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ozone.ode_function.ODEFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for required user-defined ode function.</p>
+<p>Define an ODE of the form y’ = f(t, x, y).</p>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ozone.ode_function.ODEFunction.declare_parameter" title="ozone.ode_function.ODEFunction.declare_parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">declare_parameter</span></code></a>(name, targets[, shape, …])</p></td>
+<td><p>Declare an input to the ODE.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ozone.ode_function.ODEFunction.declare_state" title="ozone.ode_function.ODEFunction.declare_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">declare_state</span></code></a>(name, rate_source[, targets, …])</p></td>
+<td><p>Add an ODE state variable.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ozone.ode_function.ODEFunction.declare_time" title="ozone.ode_function.ODEFunction.declare_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">declare_time</span></code></a>([targets, units])</p></td>
+<td><p>Specify the targets and units of time or the time-like variable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ozone.ode_function.ODEFunction.get_exact_solution" title="ozone.ode_function.ODEFunction.get_exact_solution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_exact_solution</span></code></a>(initial_conditions, t0, t)</p></td>
+<td><p>Optional method to compute the exact solution at time t given initial conditions at t0.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ozone.ode_function.ODEFunction.get_test_parameters" title="ozone.ode_function.ODEFunction.get_test_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_test_parameters</span></code></a>()</p></td>
+<td><p>Optional method to provide default parameters; used for testing.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ozone.ode_function.ODEFunction.initialize" title="ozone.ode_function.ODEFunction.initialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code></a>(**kwargs)</p></td>
+<td><p>Optional method that calls declare_time, declare_state, and/or declare_dynamic_parameter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ozone.ode_function.ODEFunction.set_system" title="ozone.ode_function.ODEFunction.set_system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_system</span></code></a>(system_class[, system_init_kwargs])</p></td>
+<td><p>Set the OpenMDAO System that computes the ODE function.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="ozone.ode_function.ODEFunction.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ozone.ode_function.ODEFunction.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional method that calls declare_time, declare_state, and/or declare_dynamic_parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>kwargs</strong><span class="classifier">dict</span></dt><dd><p>Keyword arguments passed in during instantiation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ozone.ode_function.ODEFunction.set_system">
+<code class="sig-name descname">set_system</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system_class</span></em>, <em class="sig-param"><span class="n">system_init_kwargs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ozone.ode_function.ODEFunction.set_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the OpenMDAO System that computes the ODE function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>system_class</strong><span class="classifier">System</span></dt><dd><p>OpenMDAO Group or Component class defining our ODE.</p>
+</dd>
+<dt><strong>system_init_kwargs</strong><span class="classifier">dict or None</span></dt><dd><p>Dictionary of kwargs that should be passed in when instantiating system_class.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ozone.ode_function.ODEFunction.declare_time">
+<code class="sig-name descname">declare_time</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">targets</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">units</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ozone.ode_function.ODEFunction.declare_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify the targets and units of time or the time-like variable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>targets</strong><span class="classifier">string_types or Iterable or None</span></dt><dd><p>Targets for the time or time-like variable within the ODE, or None if no models
+are explicitly time-dependent. Default is None.</p>
+</dd>
+<dt><strong>units</strong><span class="classifier">str or None</span></dt><dd><p>Units for the integration variable within the ODE. Default is None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ozone.ode_function.ODEFunction.declare_state">
+<code class="sig-name descname">declare_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">rate_source</span></em>, <em class="sig-param"><span class="n">targets</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">units</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ozone.ode_function.ODEFunction.declare_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an ODE state variable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>The name of the state variable as seen by the driver. This variable will
+exist as an interface to the ODE.</p>
+</dd>
+<dt><strong>rate_source</strong><span class="classifier">str</span></dt><dd><p>The path to the variable within the ODE which represents the derivative of
+the state variable w.r.t. the variable of integration.</p>
+</dd>
+<dt><strong>targets</strong><span class="classifier">string_types or Iterable or None</span></dt><dd><p>Paths to inputs in the ODE to which the incoming value of the state variable
+needs to be connected.</p>
+</dd>
+<dt><strong>shape</strong><span class="classifier">int or tuple or None</span></dt><dd><p>The shape of the variable to potentially be provided as a control.</p>
+</dd>
+<dt><strong>units</strong><span class="classifier">str or None</span></dt><dd><p>Units of the variable.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ozone.ode_function.ODEFunction.declare_parameter">
+<code class="sig-name descname">declare_parameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">targets</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">units</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dynamic</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ozone.ode_function.ODEFunction.declare_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare an input to the ODE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>The name of the parameter.</p>
+</dd>
+<dt><strong>targets</strong><span class="classifier">string_types or Iterable or None</span></dt><dd><p>Paths to inputs in the ODE to which the incoming value of the parameter
+needs to be connected.</p>
+</dd>
+<dt><strong>shape</strong><span class="classifier">int or tuple or None</span></dt><dd><p>Shape of the parameter.</p>
+</dd>
+<dt><strong>units</strong><span class="classifier">str or None</span></dt><dd><p>Units of the parameter.</p>
+</dd>
+<dt><strong>dynamic</strong><span class="classifier">bool</span></dt><dd><p>If True, the parameter has a different value at each time step (dynamic parameter);
+otherwise, the parameter has the same value at all time steps (static parameter).
+A dynamic parameter should have shape (num_nodes, …) where … is
+defined by the shape argument.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ozone.ode_function.ODEFunction.get_test_parameters">
+<code class="sig-name descname">get_test_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ozone.ode_function.ODEFunction.get_test_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional method to provide default parameters; used for testing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>dict</dt><dd><p>Dictionary of initial conditions keyed by state name.</p>
+</dd>
+<dt>float</dt><dd><p>Integration start time.</p>
+</dd>
+<dt>float</dt><dd><p>Integration end time.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ozone.ode_function.ODEFunction.get_exact_solution">
+<code class="sig-name descname">get_exact_solution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">initial_conditions</span></em>, <em class="sig-param"><span class="n">t0</span></em>, <em class="sig-param"><span class="n">t</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ozone.ode_function.ODEFunction.get_exact_solution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional method to compute the exact solution at time t given initial conditions at t0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>initial_conditions</strong><span class="classifier">dict</span></dt><dd><p>Dictionary of initial conditions keyed by state name.</p>
+</dd>
+<dt><strong>t0</strong><span class="classifier">float</span></dt><dd><p>Integration start time.</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">float</span></dt><dd><p>Time at which the exact solution is desired.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../api.html"
+                        title="previous chapter">API</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ode_integrator.html"
+                        title="next chapter">ODEIntegrator</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/_src_docs/api/ode_function.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ode_integrator.html" title="ODEIntegrator"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../api.html" title="API"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sphinx-example 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../api.html" >API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ODEFunction</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Victor Gandarillas.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>
