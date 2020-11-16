@@ -5,4 +5,4 @@ Examples library
   :maxdepth: 1
   :titlesonly:
 
-  examples/projectile
+  examples/attitude

@@ -26,14 +26,22 @@
 # If your documentation needs a minimal Sphinx version, state it here.
 #
 # needs_sphinx = '1.0'
-
+from openmdao.docutils import embed_code, embed_options, do_monkeypatch
+do_monkeypatch()
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.mathjax',
     'sphinx.ext.autodoc',
-    # 'numpydoc',
+    # 'sphinx.ext.autosummary',
+    'sphinx.ext.doctest',
+    'sphinx.ext.todo',
+    'sphinx.ext.coverage',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.viewcode',
+    'numpydoc',
+    # 'embed_code',
+    # 'embed_options',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -147,3 +155,4 @@ texinfo_documents = [
     (master_doc, 'sphinx-example', 'sphinx-example Documentation', author,
      'sphinx-example', 'One line description of project.', 'Miscellaneous'),
 ]
+numpydoc_show_class_members = False
